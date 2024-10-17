@@ -1,7 +1,9 @@
-#include "ascent_areas.dm"
-#include "ascent_jobs.dm"
-#include "ascent_props.dm"
-#include "ascent_shuttles.dm"
+#define WEBHOOK_SUBMAP_LOADED_ASCENT "webhook_submap_ascent"
+
+#include "ascent_caulship_areas.dm"
+#include "ascent_caulship_jobs.dm"
+#include "ascent_caulship_props.dm"
+#include "ascent_caulship_shuttles.dm"
 
 // Map template data.
 /datum/map_template/ruin/away_site/ascent_caulship_docking_ring
@@ -9,7 +11,7 @@
 	id = "awaysite_ascent_caulship"
 	description = "A small Ascent caulship with a tiny crew."
 	prefix = "mods/_maps/ascent_caulship/maps/"
-	suffixes = list("ascent-1.dmm")
+	suffixes = list("ascent_caulship.dmm")
 	area_usage_test_exempted_areas = list(
 		/area/ship/ascent_caulship
 	)
@@ -18,21 +20,38 @@
 	//player_cost = 4 // Нынешнее значение основано на количестве игроков в авейке ~bear1ake
 	shuttles_to_initialise = list(/datum/shuttle/autodock/overmap/ascent)
 
-/obj/effect/overmap/visitable/sector/ascent_caulship_ring
+/obj/overmap/visitable/sector/ascent_caulship_ring
 	name = "Ruined Bluespace Jump Ring"
-	scanner_name = "Ruined Bluespace Jump Ring"
-	scanner_desc = "A ruined jumpdrive ring of Ascent design, used to transport individual ships at FTL speeds."
+	desc = "A ruined jumpdrive ring of Ascent design, used to transport individual ships at FTL speeds."
 	sector_flags = OVERMAP_SECTOR_IN_SPACE
 	icon_state = "event"
 	hide_from_reports = TRUE
 	scannable = TRUE
 
-/obj/effect/submap_landmark/joinable_submap/ascent_caulship
+/obj/submap_landmark/joinable_submap/ascent_caulship
 	name = "Ascent Caulship"
 	archetype = /singleton/submap_archetype/ascent_caulship
 	submap_datum_type = /datum/submap/ascent
 
-/obj/effect/submap_landmark/joinable_submap/ascent_caulship/Initialize(mapload)
+// Submap datum and archetype.
+/singleton/webhook/submap_loaded/ascent
+	id = WEBHOOK_SUBMAP_LOADED_ASCENT
+
+/singleton/submap_archetype/ascent_caulship
+	descriptor = "Ascent Caulship"
+	map = "Ascent Caulship"
+	blacklisted_species = null
+	whitelisted_species = null
+	crew_jobs = list(
+		/datum/job/submap/ascent,
+		/datum/job/submap/ascent/alate,
+		/datum/job/submap/ascent/drone,
+		/datum/job/submap/ascent/worker,
+		/datum/job/submap/ascent/queen
+	)
+	call_webhook = WEBHOOK_SUBMAP_LOADED_ASCENT
+
+/obj/submap_landmark/joinable_submap/ascent_caulship/Initialize(mapload)
 	var/list/all_elements = list(
 		"Hydrogen",      "Helium",     "Lithium",     "Beryllium",    "Carbon",       "Nitrogen",      "Oxygen",
 		"Fluorine",      "Neon",       "Sodium",      "Magnesium",    "Silicon",      "Phosphorus",    "Sulfur",
@@ -52,3 +71,5 @@
 	)
 	name = "[pick(all_elements)]-[rand(10,99)]-[rand(10,99)]"
 	. = ..()
+
+#undef WEBHOOK_SUBMAP_LOADED_ASCENT

@@ -1,9 +1,8 @@
-/obj/effect/overmap/visitable/ship/landable/ascent
-	name = "Ascent Caulship"
-	scanner_name = "Caulship"
+/obj/overmap/visitable/ship/landable/ascent
+	name = "Caulship"
 	scannable = TRUE
 	shuttle = "Ascent Caulship"
-	scanner_desc = "Wake signature indicates a small unarmed vessel of unknown design."
+	desc = "Wake signature indicates a small unarmed vessel of unknown design."
 	moving_state = "ship_moving"
 	max_speed = 1/(2 SECONDS)
 	burn_delay = 1 SECONDS
@@ -14,7 +13,7 @@
 	hide_from_reports = TRUE
 	initial_restricted_waypoints = list(
 		"Caulship Landing Zone" = list("nav_ascent_caulship_start"),
-		"Caulship Docking Port" = list("nav_ascent_caulship_torch")
+		"NSV Sierra Docking Port" = list("nav_ascent_caulship_sierra")
 	)
 
 /obj/machinery/computer/shuttle_control/explore/ascent
@@ -25,14 +24,15 @@
 	icon_screen = "ascent_screen"
 	req_access = list(access_ascent)
 
-/obj/effect/shuttle_landmark/ascent_caulship
+/obj/shuttle_landmark/ascent_caulship
 	name = "Caulship Landing Zone"
 	landmark_tag = "nav_ascent_caulship_start"
 	movable_flags = MOVABLE_FLAG_EFFECTMOVE
 
-/obj/effect/shuttle_landmark/ascent_caulship/torch
-	name = "Caulship Docking Port"
-	landmark_tag = "nav_ascent_caulship_torch"
+/obj/shuttle_landmark/ascent_caulship/sierra
+	name = "NSV Sierra Docking Port"
+	landmark_tag = "nav_ascent_caulship_sierra"
+	docking_controller = "admin_shuttle_dock"
 
 /datum/shuttle/autodock/overmap/ascent
 	name = "Ascent Caulship"

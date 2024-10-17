@@ -1,9 +1,9 @@
 // Submap shuttles.
 // Trichopterax - Shuttle One, Port Side
 // Lepidopterax - Shuttle Two, Starboard Side
-/obj/effect/overmap/visitable/ship/landable/ascent_inf
+/obj/overmap/visitable/ship/landable/ascent_inf
 	name = "Trichopterax"
-	scanner_name = "Trichopterax"
+	desc = "Signature indicates a small shuttle of unknown design."
 	color = COLOR_PURPLE
 	shuttle = "Trichopterax"
 	moving_state = "ship_moving"
@@ -13,8 +13,12 @@
 	fore_dir = SOUTH
 	skill_needed = SKILL_BASIC
 	vessel_size = SHIP_SIZE_SMALL
+	initial_restricted_waypoints = list(
+		"Trichopterax Docked" = list("nav_hangar_ascent_inf_one"),
+		"NSV Sierra Docking Port" = list("nav_hangar_ascent_inf_sierra")
+	)
 
-/obj/effect/overmap/visitable/ship/landable/ascent_inf/two
+/obj/overmap/visitable/ship/landable/ascent_inf/two
 	name = "Lepidopterax"
 	shuttle = "Lepidopterax"
 	fore_dir = NORTH
@@ -31,18 +35,28 @@
 	name = "shuttle control console"
 	shuttle_tag = "Lepidopterax"
 
-/obj/effect/shuttle_landmark/ascent_seedship_inf/start
+/obj/shuttle_landmark/ascent_seedship_inf/start
 	name = "Trichopterax Docked"
 	landmark_tag = "nav_hangar_ascent_inf_one"
 	docking_controller = "ascent_inf_port_dock"
 	base_area = /area/ship/ascent_inf/wing_port
 	movable_flags = MOVABLE_FLAG_EFFECTMOVE
 
-/obj/effect/shuttle_landmark/ascent_seedship_inf/start/two
+/obj/shuttle_landmark/ascent_seedship_inf/start/two
 	name = "Lepidopterax Docked"
 	landmark_tag = "nav_hangar_ascent_inf_two"
 	docking_controller = "ascent_inf_starboard_dock"
 	base_area = /area/ship/ascent_inf/wing_starboard
+
+/obj/shuttle_landmark/ascent_seedship_inf/sierra
+	name = "NSV Sierra Docking Port"
+	landmark_tag = "nav_hangar_ascent_inf_sierra"
+	docking_controller = "rescue_shuttle_dock_airlock"
+
+/obj/shuttle_landmark/ascent_seedship_inf/sierra/two
+	name = "NSV Sierra Docking Port"
+	landmark_tag = "nav_hangar_ascent_inf_sierra_two"
+	docking_controller = "merchant_shuttle_station"
 
 /datum/shuttle/autodock/overmap/ascent_inf
 	name = "Trichopterax"
@@ -59,11 +73,10 @@
 /datum/shuttle/autodock/overmap/ascent_inf/two
 	name = "Lepidopterax"
 	warmup_time = 5
-	current_location = "nav_hangar_ascent_inf_two"
 	range = 2
 	dock_target = "ascent_inf_starboard"
 	shuttle_area = /area/ship/ascent_inf/shuttle_starboard
 	defer_initialisation = TRUE
 	flags = SHUTTLE_FLAGS_PROCESS
-	skill_needed = SKILL_NONE
+	skill_needed = SKILL_UNSKILLED
 	ceiling_type = /turf/simulated/floor/shuttle_ceiling/ascent

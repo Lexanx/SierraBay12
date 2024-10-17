@@ -1,7 +1,7 @@
 /obj/item/kharmaan_egg
 	name = "crystalline egg"
 	desc = "A lumpy, gooey egg with a thin crystalline exterior."
-	icon = 'icons/obj/ascent.dmi'
+	icon = 'mods/ascent/icons/obj/egg.dmi'
 	icon_state = "egg_single"
 	var/moved = FALSE
 
@@ -30,7 +30,7 @@
 /mob/living/simple_animal/hostile/retaliate/alate_nymph
 	name = "alate nymph"
 	desc = "A small, skittering, juvenile kharmaan alate, likely fresh from the egg."
-	icon = 'icons/mob/simple_animal/ascent.dmi'
+	icon = 'mods/ascent/icons/mob/nymph.dmi'
 	icon_state = "larva"
 	icon_living = "larva"
 	icon_dead = "larva_dead"
