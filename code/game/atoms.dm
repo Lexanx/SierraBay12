@@ -500,11 +500,11 @@
 		var/damage = 0
 		switch (severity)
 			if (EX_ACT_DEVASTATING)
-				damage = round(max_health * (rand(100, 200) / 100)) // So that even atoms resistant to explosions may still be heavily damaged at this severity. Effective range of 100% to 200%.
+				damage = round(max_health * (rand(100, 200) / 200)) // So that even atoms resistant to explosions may still be heavily damaged at this severity. Effective range of 100% to 200%.
 			if (EX_ACT_HEAVY)
-				damage = round(max_health * (rand(50, 100) / 100)) // Effective range of 50% to 100%.
+				damage = round(max_health * (rand(50, 100) / 200)) // Effective range of 50% to 100%.
 			if (EX_ACT_LIGHT)
-				damage = round(max_health * (rand(10, 50) / 100)) // Effective range of 10% to 50%.
+				damage = round(max_health * (rand(10, 50) / 200)) // Effective range of 10% to 50%.
 		if (damage)
 			damage_health(damage, DAMAGE_EXPLODE, damage_flags, severity)
 
