@@ -1,0 +1,6 @@
+#ifndef MODPACK_CULT
+#define MODPACK_CULT
+
+#include "_cult.dm"
+#include "code/cult_turfs.dm"
+#endif
