@@ -324,7 +324,7 @@
 		if(!M.stack_type)
 			return
 
-		var/num = input("Enter sheets number to eject. 0-[stored_material[material]]","Eject",0) as num
+		var/num = input("Enter sheets number to eject. 0-[stored_material[material] / 2000]","Eject",0) as num
 		if(!CanUseTopic(usr))
 			return
 
