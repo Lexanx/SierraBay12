@@ -146,7 +146,7 @@
 		if(prob(80))
 			var/pain_msg = pick("Stop it! Please!", "So much pa-pain! Stop! St-st-stop!", "Why-y? I don't wanna die!",
 								"Wait! Wa-aeae-e-et! I can pay you! Stop!", "Curse you! Cu-cuc-cure!")
-			state("says: \"<b>[pain_msg]</b>\"")
+			audible_message(SPAN_CLASS("game say", "[SPAN_CLASS("name", "\The [src]")] beeps, \"[pain_msg]\""))
 		else
 			var/pain_emote = pick("starts crying.", "mumbles something.", "blinks occasionally.")
 			state(pain_emote)
@@ -378,7 +378,7 @@
 
 /obj/machinery/hivemind_machine/mob_spawner/Initialize()
 	..()
-	mob_to_spawn = pick(/mob/living/simple_animal/hostile/hivemind/stinger, /mob/living/simple_animal/hostile/hivemind/bomber, /mob/living/simple_animal/hostile/hivemind/lobber)
+	mob_to_spawn = pick(/mob/living/simple_animal/hostile/hivemind/stinger, /mob/living/simple_animal/hostile/hivemind/bomber, /mob/living/simple_animal/hostile/hivemind/lobber, /mob/living/simple_animal/hostile/hivemind/hound)
 
 
 /obj/machinery/hivemind_machine/mob_spawner/Process()
@@ -474,7 +474,7 @@
 		msg += pick(".", "!")
 		if(i != msg_cycles)
 			msg += " "
-	GLOB.global_announcer.autosay(msg, "unknown")
+	GLOB.global_announcer.autosay(msg, "unknown", "Common" , GLOB.using_map.station_levels)
 
 
 //SHRIEKER

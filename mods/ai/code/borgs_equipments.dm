@@ -96,7 +96,7 @@
 		/obj/item/inflatable_dispenser/robot,
 		/obj/item/reagent_containers/spray/cleaner/drone,
 		/obj/item/inducer/borg,
-		/obj/item/device/plunger/robot,
+		/obj/item/clothing/mask/plunger/robot,
 		/obj/item/matter_decompiler,
 		/obj/item/stack/material/cyborg/steel,
 		/obj/item/stack/material/cyborg/aluminium,
@@ -162,7 +162,7 @@
 		/obj/item/inflatable_dispenser/robot,
 		/obj/item/reagent_containers/spray/cleaner/drone,
 		/obj/item/inducer/borg,
-		/obj/item/device/plunger/robot,
+		/obj/item/clothing/mask/plunger/robot,
 		/obj/item/matter_decompiler,
 		/obj/item/stack/material/cyborg/steel,
 		/obj/item/stack/material/cyborg/aluminium,
@@ -185,7 +185,7 @@
 		/obj/item/holosign_creator,
 		/obj/item/device/lightreplacer,
 		/obj/item/borg/sight/hud/jani,
-		/obj/item/device/plunger/robot,
+		/obj/item/clothing/mask/plunger/robot,
 		/obj/item/crowbar,
 		/obj/item/weldingtool,
 		/obj/item/device/flash
@@ -207,7 +207,7 @@
 		/obj/item/extinguisher/mini,
 		/obj/item/device/paint_sprayer,
 		/obj/item/inducer/borg,
-		/obj/item/device/plunger/robot,
+		/obj/item/clothing/mask/plunger/robot,
 		/obj/item/inflatable_dispenser/robot,
 		/obj/item/reagent_containers/spray/cleaner/drone,
 		/obj/item/borg/sight/hud/jani,
@@ -292,6 +292,7 @@
 		/obj/item/gripper/chemistry,
 		/obj/item/stack/nanopaste,
 		/obj/item/storage/part_replacer,
+		/obj/item/device/science_tool,
 		/obj/item/device/flash
 	)
 

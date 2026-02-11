@@ -211,7 +211,7 @@ var/global/floorIsLava = 0
 						body += "[block]"
 					body+="</td>"
 				body += "</tr></table>"
-
+			// [SIERRA-EDIT] - Tajara mod, Resomi mod
 			body += {"<br><br>
 				<b>Rudimentary transformation:</b>[FONT_NORMAL("<br>These transformations only create a new mob type and copy stuff over. They do not take into account MMIs and similar mob-specific things. The buttons in 'Transformations' are preferred, when possible.")]<br>
 				<a href='byond://?src=\ref[src];simplemake=observer;mob=\ref[M]'>Observer</A> |
@@ -219,6 +219,8 @@ var/global/floorIsLava = 0
 				\[ Crew: <a href='byond://?src=\ref[src];simplemake=human;mob=\ref[M]'>Human</A>
 				<a href='byond://?src=\ref[src];simplemake=human;species=Unathi;mob=\ref[M]'>Unathi</A>
 				<a href='byond://?src=\ref[src];simplemake=human;species=Skrell;mob=\ref[M]'>Skrell</A>
+				<a href='byond://?src=\ref[src];simplemake=human;species=Tajara;mob=\ref[M]'>Tajara</A>
+				<a href='byond://?src=\ref[src];simplemake=human;species=Resomi;mob=\ref[M]'>Resomi</A>
 				<a href='byond://?src=\ref[src];simplemake=human;species=Vox;mob=\ref[M]'>Vox</A> \] | \[
 				<a href='byond://?src=\ref[src];simplemake=nymph;mob=\ref[M]'>Nymph</A>
 				<a href='byond://?src=\ref[src];simplemake=human;species='Diona';mob=\ref[M]'>Diona</A> \] |
@@ -238,6 +240,7 @@ var/global/floorIsLava = 0
 				<a href='byond://?src=\ref[src];simplemake=shade;mob=\ref[M]'>Shade</A>
 				<br>
 			"}
+			// [/SIERRA-EDIT] - Tajara mod, Resomi mod
 	body += {"<br><br>
 			<b>Other actions:</b>
 			<br>
@@ -1519,16 +1522,12 @@ GLOBAL_VAR_AS(skip_allow_lists, FALSE)
 		to_chat(owner, SPAN_WARNING("Invalid origin selected."))
 		return
 
-	// Destination
-	var/department = input("Choose a destination fax", "Fax Target") as null|anything in GLOB.alldepartments
-
 	// Generate the fax
 	var/obj/item/paper/admin/P = new /obj/item/paper/admin( null ) //hopefully the null loc won't cause trouble for us
 	faxreply = P
 	P.admindatum = src
 	P.origin = replyorigin
-	P.department = department
-	P.destinations = get_fax_machines_by_department(department)
+	// P.department = department
 	P.adminbrowse()
 
 
@@ -1553,13 +1552,7 @@ GLOBAL_VAR_AS(skip_allow_lists, FALSE)
 
 	P.SetName("[customname]")
 
-	var/shouldStamp = 1
-	if(!P.sender) // admin initiated
-		switch(alert("Would you like the fax stamped?",, "Yes", "No"))
-			if("No")
-				shouldStamp = 0
-
-	if(shouldStamp)
+	if(P.should_stamp)
 		P.stamps += "<hr><i>This paper has been stamped by the [P.origin] Quantum Relay.</i>"
 
 		var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
@@ -1583,13 +1576,15 @@ GLOBAL_VAR_AS(skip_allow_lists, FALSE)
 		P.AddOverlays(stampoverlay)
 
 	var/obj/item/rcvdcopy
-	var/obj/machinery/photocopier/faxmachine/destination = P.destinations[1]
-	rcvdcopy = destination.copy(P, FALSE)
+	var/obj/machinery/photocopier/faxmachine/temp_fax = new
+	rcvdcopy = temp_fax.copy(P, FALSE)
 	rcvdcopy.forceMove(null) //hopefully this shouldn't cause trouble
 	GLOB.adminfaxes += rcvdcopy
-	var/success = send_fax_loop(P, P.department, P.origin)
+	qdel(temp_fax)
+	var/success = send_fax_loop(P, P.destinations, P.origin)
 
 	if (success)
+		var/dests_string = P.destinations.Join(", ")
 		to_chat(src.owner, SPAN_NOTICE("Message reply to transmitted successfully."))
 		if(P.sender) // sent as a reply
 			log_admin("[key_name(src.owner)] replied to a fax message from [key_name(P.sender)]")
@@ -1597,10 +1592,10 @@ GLOBAL_VAR_AS(skip_allow_lists, FALSE)
 				if((R_INVESTIGATE) & C.holder.rights)
 					to_chat(C, SPAN_CLASS("log_message", "[SPAN_CLASS("prefix", "FAX LOG:")][key_name_admin(src.owner)] replied to a fax message from [key_name_admin(P.sender)] (<a href='byond://?_src_=holder;AdminFaxView=\ref[rcvdcopy]'>VIEW</a>)"))
 		else
-			log_admin("[key_name(src.owner)] has sent a fax message to [P.department]")
+			log_admin("[key_name(src.owner)] has sent a fax message to [dests_string]")
 			for(var/client/C as anything in GLOB.admins)
 				if((R_INVESTIGATE) & C.holder.rights)
-					to_chat(C, SPAN_CLASS("log_message", "[SPAN_CLASS("prefix", "FAX LOG:")][key_name_admin(src.owner)] has sent a fax message to [P.department] (<a href='byond://?_src_=holder;AdminFaxView=\ref[rcvdcopy]'>VIEW</a>)"))
+					to_chat(C, SPAN_CLASS("log_message", "[SPAN_CLASS("prefix", "FAX LOG:")][key_name_admin(src.owner)] has sent a fax message to [dests_string] (<a href='byond://?_src_=holder;AdminFaxView=\ref[rcvdcopy]'>VIEW</a>)"))
 	else
 		to_chat(src.owner, SPAN_WARNING("Message reply failed."))
 

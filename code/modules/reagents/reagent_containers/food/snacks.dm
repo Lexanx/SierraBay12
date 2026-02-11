@@ -9,7 +9,7 @@
 	var/slices_num
 	var/dried_type = null
 	var/dry = 0
-	var/nutriment_amt = 0
+	var/nutriment_amt = 1
 	var/list/nutriment_desc = list("food" = 1)
 	var/list/eat_sound = 'sound/items/eatfood.ogg'
 	var/obj/item/trash
@@ -2361,6 +2361,30 @@
 	volume = 10
 	nutriment_amt = 1
 
+/obj/item/reagent_containers/food/snacks/cracker/use_tool(obj/item/W, mob/living/carbon/human/user, list/click_params)
+	if (!ishuman(user))
+		return FALSE
+	if (user.mind && istype(user.mind.assigned_job, /datum/job/chaplain))
+		if (istype(W,/obj/item/storage/bible/bible))
+			var/singleton/cultural_info/religion = user.get_cultural_value(TAG_RELIGION)
+			if (religion.name == RELIGION_CHRISTIANITY)
+				new /obj/item/reagent_containers/food/snacks/eucharist(src)
+				to_chat(user, SPAN_NOTICE("You consecrate the wafer."))
+				qdel(src)
+				return TRUE
+	return ..()
+
+/obj/item/reagent_containers/food/snacks/eucharist
+	name = "eucharist wafer"
+	desc = "It's a eucharistic wafer, which Catholics believe to be the Body of Christ."
+	icon_state = "eucharist_wafer"
+	filling_color = "#f5deb8"
+	center_of_mass = "x=17;y=6"
+	nutriment_desc = list("holy bread" = 1)
+	w_class = ITEM_SIZE_TINY
+	volume = 10
+	nutriment_amt = 1
+
 /obj/item/reagent_containers/food/snacks/dionaroast
 	name = "roast diona"
 	desc = "It's like an enormous, leathery carrot. With an eye."
@@ -3754,7 +3778,7 @@
 
 /obj/item/reagent_containers/food/snacks/saturn/Initialize()
 	.=..()
-	reagents.add_reagent(/datum/reagent/nutriment/groundpeanuts, 3)
+	reagents.add_reagent(/datum/reagent/nutriment/peanut/groundpeanuts, 3)
 
 
 /obj/item/reagent_containers/food/snacks/jupiter
@@ -3847,7 +3871,7 @@
 /obj/item/reagent_containers/food/snacks/weebonuts/Initialize()
 	.=..()
 	reagents.add_reagent(/datum/reagent/capsaicin, 1)
-	reagents.add_reagent(/datum/reagent/nutriment/groundpeanuts, 4)
+	reagents.add_reagent(/datum/reagent/nutriment/peanut/groundpeanuts, 4)
 
 /obj/item/reagent_containers/food/snacks/chocobanana
 	name = "choco banang"

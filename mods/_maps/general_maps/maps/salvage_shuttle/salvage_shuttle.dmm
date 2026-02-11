@@ -1301,7 +1301,7 @@
 	},
 /area/salvage_shuttle/net)
 "qi" = (
-/obj/machinery/computer/ship/sensors{
+/obj/machinery/computer/modular/preset/sensors{
 	dir = 1;
 	initial_health_percent = 10
 	},
@@ -1423,7 +1423,7 @@
 /turf/simulated/floor/lino,
 /area/derelict_cargo_ship/quarters)
 "rK" = (
-/obj/machinery/computer/ship/sensors{
+/obj/machinery/computer/modular/preset/sensors{
 	dir = 1
 	},
 /obj/machinery/atmospherics/unary/vent_scrubber/on{
@@ -2474,7 +2474,7 @@
 /turf/simulated/floor/tiled/white,
 /area/derelict_cargo_ship/medbay)
 "Ew" = (
-/obj/machinery/computer/ship/engines{
+/obj/machinery/computer/modular/preset/helm{
 	dir = 1;
 	initial_health_percent = 10
 	},
@@ -3811,7 +3811,10 @@
 	},
 /area/salvage_shuttle/net)
 "WI" = (
-/obj/machinery/computer/ship/engines{
+/obj/floor_decal/industrial/warning{
+	dir = 1
+	},
+/obj/machinery/computer/modular/preset/helm{
 	dir = 1
 	},
 /obj/machinery/atmospherics/unary/vent_pump/on{
