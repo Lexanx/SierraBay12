@@ -25,6 +25,9 @@
 	var/base_icon_state
 	var/build_type = PROTOLATHE
 
+	var/mech_type = PROTOLATHE | MECHFAB
+	var/robo_type = PROTOLATHE | ROBOTFAB
+
 	var/obj/item/stock_parts/computer/hard_drive/portable/disk
 	var/obj/item/stock_parts/computer/hard_drive/portable/disk2
 
@@ -65,6 +68,9 @@
 	var/have_materials = TRUE
 	var/have_recycling = TRUE
 	var/have_design_selector = TRUE
+
+	/// Robofab sause
+	var/manufacturer = null
 
 	var/list/unsuitable_materials = list()
 	var/list/suitable_materials //List that limits autolathes to eating mats only in that list.
@@ -183,14 +189,27 @@
 	var/list/L = list()
 	for(var/d in design_list())
 		var/datum/computer_file/binary/design/design_file = d
+		if(!design_file.design)
+			continue
+		// Skip hidden or server-banned designs
+		if(can_print(design_file) == ERR_NOTFOUND)
+			continue
 		if(!show_category || design_file.design.category == show_category)
-			L.Add(list(design_file.ui_data()))
+			var/list/ddata = design_file.ui_data()
+			ddata["can_build"] = (check_materials(design_file.design) == ERR_OK)
+			L.Add(list(ddata))
 
 	var/list/O = list()
 	for(var/f in design_list_two())
 		var/datum/computer_file/binary/design/design_file = f
+		if(!design_file.design)
+			continue
+		if(can_print(design_file) == ERR_NOTFOUND)
+			continue
 		if(!show_category || design_file.design.category == show_category)
-			O.Add(list(design_file.ui_data()))
+			var/list/ddata = design_file.ui_data()
+			ddata["can_build"] = (check_materials(design_file.design) == ERR_OK)
+			O.Add(list(ddata))
 
 	L |= O
 
@@ -240,7 +259,7 @@
 	if(!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
-		ui = new(user, src, ui_key, "mods-autolathe.tmpl", capitalize(name), 600, 700)
+		ui = new(user, src, ui_key, "mods-autolathe.tmpl", capitalize(name), 660, 720)
 
 		// template keys starting with _ are not appended to the UI automatically and have to be called manually
 		ui.add_template("_materials", "mods-autolathe_materials.tmpl")
@@ -749,15 +768,18 @@
 /obj/machinery/fabricator/proc/check_materials(datum/design/design)
 
 	if(design.build_type != build_type)
-		var/second_check = build_type | MECHFAB
-		if(design.build_type != second_check)
+		var/mech_check = mech_type
+		var/robo_check = robo_type
+		if(design.build_type != mech_check && design.build_type != robo_check)
 			return ERR_NOCOMPAT
 
 	for(var/rmat in design.materials)
+		var/material_cost = design.adjust_materials ? SANITIZE_LATHE_COST(design.materials[rmat]) : design.materials[rmat]
+
 		if(!(rmat in stored_material))
 			return ERR_NOMATERIAL
 
-		if(stored_material[rmat] < SANITIZE_LATHE_COST(design.materials[rmat]))
+		if(stored_material[rmat] < material_cost * mat_efficiency)
 			return ERR_NOMATERIAL
 
 	if(LAZYLEN(design.chemicals))
@@ -950,7 +972,13 @@
 
 /obj/machinery/fabricator/proc/fabricate_design(datum/design/design)
 	consume_materials(design)
-	design.Fabricate(get_turf(loc), mat_efficiency, src)
+	var/obj/new_item = design.Fabricate(get_turf(loc), mat_efficiency, src)
+	// Reverse-engineered storage containers are printed empty.
+	// Contents spawned by Initialize() are free items the player didn't pay for.
+	// Normal designs (e.g. toolboxes) retain their default contents.
+	if(design.reverse_engineered && istype(new_item, /obj/item/storage) && length(new_item.contents))
+		for(var/atom/movable/A in new_item.contents)
+			qdel(A)
 	working = FALSE
 	current_file = null
 	print_post()
